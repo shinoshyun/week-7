@@ -1,4 +1,6 @@
 from flask import Flask, request, render_template, redirect, session
+import json
+from flask_restful import Api, Resource
 
 # 要先把mysql和python連結在一起
 import mysql.connector
@@ -16,7 +18,10 @@ cursor = mysql_connection.cursor(buffered=True)
 app = Flask(__name__, static_folder="static",
             static_url_path="/")  # __name__ 代表目前執行的模組
 
-#import session的時候要使用的語法
+api = Api(app)
+
+
+# import session的時候要使用的語法
 app.secret_key = "any string but secret"
 
 
@@ -30,7 +35,7 @@ def member():
     # 如果 id 和 name 都有在session裡面
     if "id" and "name" in session:
         name = session["name"]
-        return render_template("member.html", account=name)
+        return render_template("member.html", name=name)
 
     else:  # 沒有的話就會被導到首頁
         return redirect("/")
@@ -107,4 +112,37 @@ def signup():
         return redirect("/")
 
 
-app.run(port=3000)
+def data():
+    account = request.args.get("account")
+    password = request.args.get("password")
+
+    username = request.args.get("username", 67)
+    check = "SELECT * FROM membership WHERE username = %s"
+    check_val = (username,)
+    cursor.execute(check, check_val)
+    records = cursor.fetchone()
+
+    if records == None:
+        data = None
+#
+    else:
+        data = {
+            "id": records[0],
+            "name": records[1],
+            "username": records[2]
+        }
+    return data
+
+
+class Members(Resource):
+    def get(self):
+        return {"data": data()}, 200
+
+
+# 建立API路由products，並將該路由導向Products物件
+api.add_resource(Members, '/api/member')
+
+
+if __name__ == "__main__":
+    app.run(port=3000)
+# app.run(port=3000)
