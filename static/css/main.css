@@ -10,7 +10,7 @@
 .login-system h2,
 .signup-system h2,
 .message-system h2,
-.msgboard-system h2 {
+.check-system h2 {
     font-size: 25px;
     font-weight: bold;
     margin-bottom: 1%;
@@ -19,7 +19,7 @@
 .login-system,
 .signup-system,
 .message-system,
-.msgboard-system {
+.check-system {
     text-align: center;
     margin-top: 3em;
 }
@@ -27,7 +27,7 @@
 .username,
 .password,
 .account,
-.message {
+.check {
     margin-bottom: 0.5em;
     display: flex;
     justify-content: center;
@@ -35,8 +35,7 @@
 
 .username h3,
 .password h3,
-.account h3,
-.message h3 {
+.account h3 {
     padding-right: 5px;
     font-size: 20px;
 }
