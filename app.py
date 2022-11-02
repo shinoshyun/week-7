@@ -113,9 +113,6 @@ def signup():
 
 
 def data():
-    account = request.args.get("account")
-    password = request.args.get("password")
-
     username = request.args.get("username", 67)
     check = "SELECT * FROM membership WHERE username = %s"
     check_val = (username,)
@@ -139,7 +136,6 @@ class Members(Resource):
         return {"data": data()}, 200
 
 
-# 建立API路由products，並將該路由導向Products物件
 api.add_resource(Members, '/api/member')
 
 
