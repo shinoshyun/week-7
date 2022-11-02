@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <!-- 靜態寫法：在資料夾static/css/main.css 要這樣創建資料夾-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+
 </head>
 
 <body>
@@ -18,15 +19,36 @@
         <a href="/signout">登出系統</a>
     </div>
     <hr>
-
+    <!-- <form action="/check"> -->
     <div class="check-system">
         <h2>查詢會員姓名</h2>
         <div class="check">
-            <input type="text" id="check" />
+            <input type="text" id="check" value="1105" />
         </div>
         <input type="submit" value="查詢" onclick="submit()" />
+        <h3 id="resultText"></h3>
     </div>
+    <!-- </form> -->
 
+
+
+
+    <script>
+        function submit() {
+            let check = document.getElementById("check").value;
+            let data = { check }
+
+            fetch(`http://127.0.0.1:3000/api/member?username=${check}`, data).then(function (response) { return response.json(); }).then(function (data) {
+                let memberName = data.data.name;  // 獲得會員姓名
+                let memberUsername = data.data.username;  // 獲得會員帳號
+
+
+                document.getElementById("resultText").innerHTML = memberName + '(' + memberUsername + ')'
+            })
+        }
+
+
+    </script>
 </body>
 
 </html>
