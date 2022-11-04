@@ -10,7 +10,8 @@
 .login-system h2,
 .signup-system h2,
 .message-system h2,
-.check-system h2 {
+.check-system h2,
+.renew-system h2 {
     font-size: 25px;
     font-weight: bold;
     margin-bottom: 1%;
@@ -19,7 +20,8 @@
 .login-system,
 .signup-system,
 .message-system,
-.check-system {
+.check-system,
+.renew-system {
     text-align: center;
     margin-top: 3em;
 }
@@ -27,7 +29,8 @@
 .username,
 .password,
 .account,
-.check {
+.check,
+.renew {
     margin-bottom: 0.5em;
     display: flex;
     justify-content: center;
@@ -44,7 +47,8 @@ hr {
     margin-top: 3.5em;
 }
 
-.check-system h3 {
+.check-system h3,
+.renew-system h3 {
     margin-top: 2rem;
     font-size: 25px;
 }
