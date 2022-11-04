@@ -9,16 +9,8 @@ CREATE TABLE membership(
     username varchar(255) NOT NULL,
     password varchar(255) NOT NULL
 );
+SET SQL_SAFE_UPDATES=0;
+UPDATE membership SET name="philip" WHERE username=1105;
 
 SELECT * FROM membership;
 
-SELECT * FROM membermsg;
-CREATE TABLE membermsg(
-	id bigint PRIMARY KEY AUTO_INCREMENT,
-    name_id bigint NOT NULL,
-    content varchar(255) NOT NULL
-);
-
-SELECT * FROM membership INNER JOIN membermsg ON membership.id=membermsg.name_id;
-
-SELECT membership.name, membermsg.content FROM membership INNER JOIN membermsg ON membership.id=membermsg.name_id;
