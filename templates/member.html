@@ -97,10 +97,13 @@
                     }
 
                     response.json().then(function (data) {
-                        console.log(data)
+                        console.log(data);
+                        document.getElementById("renewText").innerHTML = '更新成功'
+                    }).catch(function (error) {
+                        console.log(error);
+                        document.getElementById("renewText").innerHTML = '更新失敗'
                     })
-                    document.getElementById("renewText").innerHTML = '更新成功'
-                    //把獲得的資訊傳到HTML
+
                 })
 
         }
