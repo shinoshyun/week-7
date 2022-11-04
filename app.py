@@ -8,7 +8,7 @@ mysql_connection = mysql.connector.connect(
     host='localhost',
     port='3306',
     user='root',
-    password='',
+    password='dumplings67',
     database='member_data'
 )
 # 代表mysql:我要開始使用囉!的意思~
