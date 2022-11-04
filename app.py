@@ -149,12 +149,6 @@ def renew_data():
     cursor.execute(check, check_val)
     mysql_connection.commit()
 
-    check_newname = "SELECT * FROM membership WHERE name=%s"
-    check_val = (newname,)
-    cursor.execute(check_newname, check_val)
-    records = cursor.fetchone()
-    print(records[1])  # 打哈囉，印出哈囉
-
     try:
         res = make_response(jsonify({"ok": True}), 200)
 
