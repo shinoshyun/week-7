@@ -19,34 +19,91 @@
         <a href="/signout">登出系統</a>
     </div>
     <hr>
-    <!-- <form action="/check"> -->
+
     <div class="check-system">
         <h2>查詢會員姓名</h2>
         <div class="check">
-            <input type="text" id="check" value="1105" />
+            <label><input type="text" id="check" value="67" /></label>
+            <input type="submit" value="查詢" onclick="submit()" />
         </div>
-        <input type="submit" value="查詢" onclick="submit()" />
-        <h3 id="resultText"></h3>
+
+        <h3 id="checkText"></h3>
     </div>
-    <!-- </form> -->
+    <hr>
 
+    <div class="renew-system">
+        <h2>更新我的姓名</h2>
+        <div class="renew">
+            <label><input type="text" name="newname" id="renew" value="哈囉" /></label>
+            <input type="submit" value="更新" onclick="renew()" />
+        </div>
 
+        <h3 id="renewText"></h3>
+    </div>
 
 
     <script>
+        // 相關教學資源 https://pjchender.blogspot.com/2015/11/javascript.html
+        // HTML<input type="text" id="check" value="67" />的function 
+        // 透過html 的id放入 去擷取裡面的value值，傳入變數check
         function submit() {
+            function postData(url, data) {
+
+                return fetch(url, {
+                    body: JSON.stringify(data),
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    headers: {
+                        'user-agent': 'Example',
+                        'content-type': 'application/json'
+                    },
+                    method: 'GET',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    referrer: 'no-referrer',
+                })
+                    .then(response => response.json()) // 輸出成 json
+            }
+
             let check = document.getElementById("check").value;
-            let data = { check }
 
-            fetch(`http://127.0.0.1:3000/api/member?username=${check}`, data).then(function (response) { return response.json(); }).then(function (data) {
-                let memberName = data.data.name;  // 獲得會員姓名
-                let memberUsername = data.data.username;  // 獲得會員帳號
-
-
-                document.getElementById("resultText").innerHTML = memberName + '(' + memberUsername + ')'
+            postData(`http://127.0.0.1:3000/api/member?username=${check}`).then(data => {
+                let memberName = data.data.name;
+                let memberUsername = data.data.username;
+                console.log(memberName);
+                console.log(memberUsername);
+                document.getElementById("checkText").innerHTML = memberName + ' (' + memberUsername + ') ' //把獲得的資訊傳到HTML
             })
         }
 
+
+        function renew() {
+            let renew = document.getElementById("renew").value;
+            let entry = { name: renew };
+
+            fetch(`http://127.0.0.1:3000/api/member`, {
+                method: "PATCH",
+                credentials: "include",
+                body: JSON.stringify(entry),
+                cache: "no-cache",
+                headers: new Headers({
+                    "content-type": "application/json"
+                })
+            })
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        console.log(`Response status was not 200:${response.status}`)
+                        return;
+                    }
+
+                    response.json().then(function (data) {
+                        console.log(data)
+                    })
+                    document.getElementById("renewText").innerHTML = '更新成功'
+                    //把獲得的資訊傳到HTML
+                })
+
+        }
 
     </script>
 </body>
