@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, jsonify, make_response
 import json
 from flask_restful import Api, Resource
 
@@ -67,9 +67,11 @@ def signin():
         return redirect("/error?message=帳號或密碼輸入錯誤")
 
     else:
+
         # 因為records是一個陣列 像是[(1),(shino), (67), (67)]，所以records[0]=1，records[1]=shino，再存到session裡面~
         session["id"] = records[0]
         session["name"] = records[1]
+
         return redirect("/member")
 
 
@@ -112,33 +114,54 @@ def signup():
         return redirect("/")
 
 
+@app.route("/api/member", methods=["GET"])
 def data():
-    username = request.args.get("username", 67)
-    check = "SELECT * FROM membership WHERE username = %s"
-    check_val = (username,)
-    cursor.execute(check, check_val)
-    records = cursor.fetchone()
+    if "id" and "name" in session:
+        # 用username去和資料庫比對
+        username = request.args.get("username", 67)
+        check = "SELECT * FROM membership WHERE username = %s"
+        check_val = (username,)
+        cursor.execute(check, check_val)
+        records = cursor.fetchone()
 
-    if records == None:
-        data = None
-#
-    else:
+    try:
         data = {
             "id": records[0],
             "name": records[1],
             "username": records[2]
         }
-    return data
+
+    except Exception:
+        data = None
+
+    return jsonify({"data": data})
 
 
-class Members(Resource):
-    def get(self):
-        return {"data": data()}, 200
+@app.route("/api/member", methods=["PATCH"])
+def renew_data():
+
+    req = request.get_json()
+    newname = req["name"]
+    id = session["id"]
+
+    check = "UPDATE membership SET name=%s WHERE id = %s"
+    check_val = (newname, id)
+    cursor.execute(check, check_val)
+    mysql_connection.commit()
+
+    check_newname = "SELECT * FROM membership WHERE name=%s"
+    check_val = (newname,)
+    cursor.execute(check_newname, check_val)
+    records = cursor.fetchone()
+    print(records[1])  # 打哈囉，印出哈囉
+
+    try:
+        res = make_response(jsonify({"ok": True}), 200)
+
+    except:
+        res = make_response(jsonify({"error": True}))
+
+    return res
 
 
-api.add_resource(Members, '/api/member')
-
-
-if __name__ == "__main__":
-    app.run(port=3000)
-# app.run(port=3000)
+app.run(port=3000, debug=True)
